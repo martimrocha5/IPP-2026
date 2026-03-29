@@ -1,0 +1,1 @@
+# Vai ser tipo o main do trabalho, onde vai estar a correr informação e interligar o model.py e o view.py

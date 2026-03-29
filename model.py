@@ -1,1 +1,1 @@
-print('boas')
+# Aqui basicamente vai ser para pegar nos dados e fazer contas
