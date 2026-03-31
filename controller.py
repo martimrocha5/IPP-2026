@@ -1,5 +1,6 @@
 from dados import Utilizador, Segmento, RedeUrbana
 import json
+from model import MotorAnalise
 
 def main():
     rede = RedeUrbana()
@@ -109,6 +110,25 @@ def main():
                         print(f"Aviso: Não existe um segmento direto registado entre '{origem}' e '{destino}'.")
                 else:
                     print("Erro: Formato inválido. Utiliza: ver <origem> <destino>")
+            
+            elif comando == "recomendar":
+                if len(partes) >= 4:
+                    origem = partes[1]
+                    destino = partes[2]
+                    id_utilizador = partes[3]
+                    
+                    modo_escolhido = partes[4] if len(partes) > 4 else "padrao"
+                    
+                    if id_utilizador in utilizadores:
+                        user_atual = utilizadores[id_utilizador]
+                        
+                        print(f"A calcular rota de '{origem}' para '{destino}' para o utilizador {user_atual.get_nome()}...")
+                        print(f"Modo ativado: {modo_escolhido}")
+                        
+                    else:
+                        print(f"Erro: Utilizador com ID '{id_utilizador}' não encontrado.")
+                else:
+                    print("Erro: Formato inválido. Utiliza: recomendar <origem> <destino> <id_utilizador> [modo_opcional]")
                 
             else:
                 print("Erro: Comando não reconhecido.")
