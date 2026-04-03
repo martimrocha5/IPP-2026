@@ -1,10 +1,13 @@
 from dados import Utilizador, Segmento, RedeUrbana
 import json
-from model import MotorAnalise
+from model import MotorAnalise, MotorRecomendacao
 
 def main():
     rede = RedeUrbana()
     utilizadores = {}
+    
+    motor_analise = MotorAnalise()
+    motor_recomendacao = MotorRecomendacao(motor_analise)
 
     while True:
         try:
@@ -116,19 +119,56 @@ def main():
                     origem = partes[1]
                     destino = partes[2]
                     id_utilizador = partes[3]
-                    
                     modo_escolhido = partes[4] if len(partes) > 4 else "padrao"
-                    
+
                     if id_utilizador in utilizadores:
                         user_atual = utilizadores[id_utilizador]
-                        
-                        print(f"A calcular rota de '{origem}' para '{destino}' para o utilizador {user_atual.get_nome()}...")
-                        print(f"Modo ativado: {modo_escolhido}")
-                        
+                        print(f"\n A calcular rota de '{origem}' para '{destino}' para {user_atual.get_nome()} (Modo: {modo_escolhido})...")
+
+                        caminho, custo = motor_recomendacao.encontrar_melhor_caminho(rede, origem, destino, user_atual, modo_escolhido)
+
+                        if caminho:
+                            print("\n Percurso Encontrado!")
+                            print(f"Custo total (Índice de Conforto): {custo}")
+                            distancia_total = sum(seg.get_distancia() for seg in caminho)
+                            print(f"Distância total: {distancia_total}m")
+
+                            print("\n Itinerário:")
+                            for i, seg in enumerate(caminho, 1):
+                                print(f"  {i}. {seg.get_origem()} -> {seg.get_destino()} ({seg.get_distancia()}m)")
+                            print("\n Destino atingido com sucesso! ")
+                        else:
+                            print(f"\n Aviso: Não foi possível encontrar um caminho seguro entre '{origem}' e '{destino}'.")
+
                     else:
                         print(f"Erro: Utilizador com ID '{id_utilizador}' não encontrado.")
                 else:
                     print("Erro: Formato inválido. Utiliza: recomendar <origem> <destino> <id_utilizador> [modo_opcional]")
+            
+            elif comando == "gravar":
+                if len(partes) == 2:
+                    ficheiro = partes[1]
+                    try:
+                        dados_exportar = []
+                        
+                        for uid, user in utilizadores.items():
+                            dados_exportar.append({
+                                "id": uid,
+                                "nome": user.get_nome(),
+                                "idade": user.get_idade(),
+                                "sexo": user.get_sexo(),
+                                "perfil": user.get_perfil()
+                            })
+                        
+                        with open(ficheiro, 'w', encoding='utf-8') as f:
+                            json.dump(dados_exportar, f, ensure_ascii=False, indent=4)
+                            
+                        print(f"Sucesso: Dados de {len(utilizadores)} utilizadores guardados de forma segura em '{ficheiro}'.")
+                        
+                    except Exception as e:
+                        print(f"Erro crítico ao tentar gravar o ficheiro: {e}")
+                else:
+                    print("Erro: Formato inválido. Utiliza: gravar <ficheiro>")
                 
             else:
                 print("Erro: Comando não reconhecido.")
