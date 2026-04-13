@@ -2,18 +2,17 @@ import json
 import random
 
 def gerar_dataset_utilizadores(quantidade, nome_ficheiro="dataset_utilizadores.json"):
-    # Listas separadas para garantir coerência com o sexo
+    
     primeiros_nomes_m = ["João", "Pedro", "Tiago", "Rui", "Miguel", "Hugo", "Diogo", "Bruno", "Gonçalo", "Tomás"]
     primeiros_nomes_f = ["Ana", "Maria", "Catarina", "Beatriz", "Sofia", "Inês", "Marta", "Joana", "Leonor", "Carolina"]
     apelidos = ["Silva", "Santos", "Ferreira", "Pereira", "Oliveira", "Costa", "Rodrigues", "Martins", "Gomes", "Lopes"]
-    
-    # Perfis definidos no enunciado do projeto
+
     perfis_possiveis = ["idoso", "pessoa com mobilidade reduzida", "adulto saudável"]
     
     utilizadores = []
     
     for i in range(1, quantidade + 1):
-        # 1. Gerar ID único (ex: U00001, U00002, etc.)
+
         id_utilizador = f"U{i:05d}"
         
         # 2. Definir o sexo e escolher o nome correspondente
