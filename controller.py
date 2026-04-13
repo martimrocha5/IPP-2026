@@ -2,12 +2,49 @@ from dados import Utilizador, Segmento, RedeUrbana
 import json
 from model import MotorAnalise, MotorRecomendacao
 
+def inicializar_braga(rede, utilizadores, ficheiro_dataset="dataset_utilizadores.json"):
+    try:
+        with open(ficheiro_dataset, 'r', encoding='utf-8') as f:
+            dados_users = json.load(f)
+  
+            for user in dados_users:
+                uid = user["id"]
+                novo_user = Utilizador(
+                    id_utilizador=uid,
+                    nome=user["nome"],
+                    idade=user["idade"],
+                    sexo=user["sexo"],
+                    perfil=user["perfil"]
+                )
+                utilizadores[uid] = novo_user
+                
+        print(f" Sucesso: {len(utilizadores)} utilizadores carregados do dataset!")
+        
+    except FileNotFoundError:
+        print(f" Aviso: O ficheiro '{ficheiro_dataset}' não foi encontrado. A arrancar a rede sem utilizadores iniciais.")
+    except Exception as e:
+        print(f" Erro ao ler o dataset de utilizadores: {e}")
+
+    s1 = Segmento("UMinho_Gualtar", "Braga_Parque", 1200, 19, 85, 45, 60, 1, "regular", "sim", "boa")
+    s2 = Segmento("UMinho_Gualtar", "Bom_Jesus", 3500, 17, 95, 20, 90, 18, "regular", "sim", "media")
+    s3 = Segmento("Braga_Parque", "Praca_Republica", 1500, 22, 50, 75, 20, 2, "irregular", "sim", "excelente")
+    s4 = Segmento("Praca_Republica", "Estacao_Comboios", 800, 21, 40, 85, 10, 1, "regular", "sim", "excelente")
+    s5 = Segmento("Braga_Parque", "Estacao_Comboios", 2500, 20, 45, 70, 15, 2, "regular", "sim", "boa")
+    s6 = Segmento("Praca_Republica", "Bom_Jesus", 4000, 18, 80, 30, 70, 15, "irregular", "sim", "media")
+
+    for s in [s1, s2, s3, s4, s5, s6]:
+        rede.adicionar_segmento(s)
+
+    print(" Sistema inicializado com a malha urbana 'Braga Saudável'.")
+
 def main():
     rede = RedeUrbana()
     utilizadores = {}
     
     motor_analise = MotorAnalise()
     motor_recomendacao = MotorRecomendacao(motor_analise)
+
+    inicializar_braga(rede, utilizadores)
 
     while True:
         try:

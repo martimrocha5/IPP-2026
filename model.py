@@ -79,4 +79,3 @@ class MotorRecomendacao:
                     heapq.heappush(fila_prioridade, (novo_custo, vizinho))
 
         return None, float('inf')
-

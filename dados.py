@@ -96,7 +96,7 @@ class RedeUrbana:
             segmento.get_qualidade_ar(),
             segmento.get_ruido(),
             segmento.get_zonas_verdes(),
-            segmento.get_inclinacao(),
+            0 if segmento.get_inclinacao() > 0 else segmento.get_inclinacao(),
             segmento.get_pavimento(),
             segmento.get_passadeiras(),
             segmento.get_iluminacao()
