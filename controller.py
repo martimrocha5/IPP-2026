@@ -1,29 +1,29 @@
 from dados import Utilizador, Segmento, RedeUrbana
 import json
 from model import MotorAnalise, MotorRecomendacao
+from arvores import ArvoreUtilizadores
 
 def inicializar_braga(rede, utilizadores, ficheiro_dataset="dataset_utilizadores.json"):
     try:
         with open(ficheiro_dataset, 'r', encoding='utf-8') as f:
             dados_users = json.load(f)
-  
+            
             for user in dados_users:
-                uid = user["id"]
                 novo_user = Utilizador(
-                    id_utilizador=uid,
+                    id_utilizador=user["id"],
                     nome=user["nome"],
                     idade=user["idade"],
                     sexo=user["sexo"],
                     perfil=user["perfil"]
                 )
-                utilizadores[uid] = novo_user
+                utilizadores.inserir(novo_user)
                 
-        print(f" Sucesso: {len(utilizadores)} utilizadores carregados do dataset!")
+        print(" Sucesso: Utilizadores carregados para a Árvore Binária de Procura!")
         
     except FileNotFoundError:
-        print(f" Aviso: O ficheiro '{ficheiro_dataset}' não foi encontrado. A arrancar a rede sem utilizadores iniciais.")
+        print(f" Aviso: O ficheiro '{ficheiro_dataset}' não foi encontrado.")
     except Exception as e:
-        print(f" Erro ao ler o dataset de utilizadores: {e}")
+        print(f" Erro ao ler o dataset: {e}")
 
     s1 = Segmento("UMinho_Gualtar", "Braga_Parque", 1200, 19, 85, 45, 60, 1, "regular", "sim", "boa")
     s2 = Segmento("UMinho_Gualtar", "Bom_Jesus", 3500, 17, 95, 20, 90, 18, "regular", "sim", "media")
@@ -35,11 +35,12 @@ def inicializar_braga(rede, utilizadores, ficheiro_dataset="dataset_utilizadores
     for s in [s1, s2, s3, s4, s5, s6]:
         rede.adicionar_segmento(s)
 
-    print(" Sistema inicializado com a malha urbana 'Braga Saudável'.")
+    print("Sistema inicializado com a malha urbana completa de 'Braga Saudável'.")
+
 
 def main():
     rede = RedeUrbana()
-    utilizadores = {}
+    utilizadores = ArvoreUtilizadores()
     
     motor_analise = MotorAnalise()
     motor_recomendacao = MotorRecomendacao(motor_analise)
@@ -158,9 +159,10 @@ def main():
                     id_utilizador = partes[3]
                     modo_escolhido = partes[4] if len(partes) > 4 else "padrao"
 
-                    if id_utilizador in utilizadores:
-                        user_atual = utilizadores[id_utilizador]
-                        print(f"\n A calcular rota de '{origem}' para '{destino}' para {user_atual.get_nome()} (Modo: {modo_escolhido})...")
+                    user_atual = utilizadores.procurar(id_utilizador)
+
+                    if user_atual is not None:
+                        print(f"\nA calcular rota de '{origem}' para '{destino}' para {user_atual.get_nome()} (Modo: {modo_escolhido})...")
 
                         caminho, custo = motor_recomendacao.encontrar_melhor_caminho(rede, origem, destino, user_atual, modo_escolhido)
 
@@ -173,12 +175,12 @@ def main():
                             print("\n Itinerário:")
                             for i, seg in enumerate(caminho, 1):
                                 print(f"  {i}. {seg.get_origem()} -> {seg.get_destino()} ({seg.get_distancia()}m)")
-                            print("\n Destino atingido com sucesso! ")
+                            print("\nDestino atingido com sucesso! 🏁")
                         else:
                             print(f"\n Aviso: Não foi possível encontrar um caminho seguro entre '{origem}' e '{destino}'.")
 
                     else:
-                        print(f"Erro: Utilizador com ID '{id_utilizador}' não encontrado.")
+                        print(f"Erro: Utilizador com ID '{id_utilizador}' não encontrado na Árvore.")
                 else:
                     print("Erro: Formato inválido. Utiliza: recomendar <origem> <destino> <id_utilizador> [modo_opcional]")
             
