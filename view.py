@@ -1,7 +1,3 @@
-# Vai mostrar ao utlizador o que está a acontecer
-
-# Rubis aka Botija aka Bestie aka Apaz aka EstouFartaDeAAturar aka QueroFazerXixi aka TenhoFome aka TenhoSono
-
 class View:
     @staticmethod
     def mostrar_mapa():
@@ -55,7 +51,7 @@ class View:
     @staticmethod
     def mostrar_detalhes_segmento(origem, destino, seg):
         if seg is not None:
-            print(f"\n--- 🔍 Detalhes do Percurso: {origem} -> {destino} ---")
+            print(f"\n---  Detalhes do Percurso: {origem} -> {destino} ---")
             print(f" Distância: {seg.get_distancia()}m")
             print(f" Ambiente -> Temp: {seg.get_temperatura()}ºC | Ar: {seg.get_qualidade_ar()} | Ruído: {seg.get_ruido()} | Verdes: {seg.get_zonas_verdes()}")
             print(f" Acessibilidade -> Inclinação: {seg.get_inclinacao()} | Pavimento: {seg.get_pavimento()} | Passadeiras: {seg.get_passadeiras()}")

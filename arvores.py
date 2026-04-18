@@ -18,7 +18,7 @@ class ArvoreUtilizadores:
             self._inserir_recursivo(self._raiz, utilizador)
 
     def _inserir_recursivo(self, nodo, utilizador):
-        # Compara os IDs alfabeticamente/numericamente
+
         if utilizador.get_id() < nodo.get_utilizador().get_id():
             if nodo._esq is None:
                 nodo._esq = NodoUtilizador(utilizador)
