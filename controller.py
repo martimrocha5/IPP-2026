@@ -2,6 +2,7 @@ from dados import Utilizador, Segmento, RedeUrbana
 import json
 from model import MotorAnalise, MotorRecomendacao
 from arvores import ArvoreUtilizadores
+from view import View
 
 def inicializar_braga(rede, utilizadores, ficheiro_dataset="dataset_utilizadores.json"):
     try:
@@ -136,22 +137,17 @@ def main():
                     origem = partes[1]
                     destino = partes[2]
                     conexoes = rede.obter_conexoes(origem)
-                    encontrado = False
+                    segmento_encontrado = None
                     
                     for seg in conexoes:
                         if seg.get_destino() == destino:
-                            print(f"\n--- Detalhes do Percurso: {origem} -> {destino} ---")
-                            print(f"Distância: {seg.get_distancia()}m")
-                            print(f"Ambiente -> Temp: {seg.get_temperatura()} | Ar: {seg.get_qualidade_ar()} | Ruído: {seg.get_ruido()} | Verdes: {seg.get_zonas_verdes()}")
-                            print(f"Acessibilidade -> Inclinação: {seg.get_inclinacao()} | Pavimento: {seg.get_pavimento()} | Passadeiras: {seg.get_passadeiras()} | Iluminação: {seg.get_iluminacao()}\n")
-                            encontrado = True
+                            segmento_encontrado = seg
                             break
-                            
-                    if not encontrado:
-                        print(f"Aviso: Não existe um segmento direto registado entre '{origem}' e '{destino}'.")
+
+                    View.mostrar_detalhes_segmento(origem, destino, segmento_encontrado)
                 else:
                     print("Erro: Formato inválido. Utiliza: ver <origem> <destino>")
-            
+                
             elif comando == "recomendar":
                 if len(partes) >= 4:
                     origem = partes[1]
@@ -165,6 +161,8 @@ def main():
                         print(f"\nA calcular rota de '{origem}' para '{destino}' para {user_atual.get_nome()} (Modo: {modo_escolhido})...")
 
                         caminho, custo = motor_recomendacao.encontrar_melhor_caminho(rede, origem, destino, user_atual, modo_escolhido)
+                        
+                        View.mostrar_resultado_rota(origem, destino, user_atual.get_nome(), modo_escolhido, caminho, custo)
 
                         if caminho:
                             print("\n Percurso Encontrado!")
@@ -208,7 +206,10 @@ def main():
                         print(f"Erro crítico ao tentar gravar o ficheiro: {e}")
                 else:
                     print("Erro: Formato inválido. Utiliza: gravar <ficheiro>")
-                
+            
+            elif comando == "mapa":
+                View.mostrar_mapa()
+            
             else:
                 print("Erro: Comando não reconhecido.")
             
