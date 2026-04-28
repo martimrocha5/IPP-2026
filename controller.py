@@ -3,6 +3,7 @@ import json
 from model import MotorAnalise, MotorRecomendacao
 from arvores import ArvoreUtilizadores
 from view import View
+from graficos import VisualizacaoDados
 
 def inicializar_braga(rede, utilizadores, ficheiro_dataset="dataset_utilizadores.json"):
     try:
@@ -209,6 +210,9 @@ def main():
             
             elif comando == "mapa":
                 View.mostrar_mapa()
+            
+            elif comando == "estatisticas":
+                VisualizacaoDados.raio_x_cidade(rede)
             
             else:
                 print("Erro: Comando não reconhecido.")
