@@ -7,6 +7,7 @@ from model import MotorAnalise, MotorRecomendacao
 from arvores import ArvoreUtilizadores
 from view import View
 from graficos import VisualizacaoDados
+import random
 
 def gravar_dados(rede, utilizadores, ficheiro):
     """Gravar utilizadores e segmentos em ficheiro JSON"""
@@ -216,7 +217,7 @@ def main():
 
             elif comando == "ins_utilizador":
                 if len(partes) >= 5:
-                    novo_id = f"U{np.random.randint(2000, 9999)}"
+                    novo_id = f"U{random.randint(2000, 9999)}"
                     nome = partes[1]
                     try:
                         idade = int(partes[2])
