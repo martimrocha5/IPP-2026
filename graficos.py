@@ -111,3 +111,29 @@ class VisualizacaoDados:
         fig.tight_layout()
         print("\n A abrir o painel de análise de utilizadores... (fecha a janela para continuares)")
         plt.show()
+
+    @staticmethod
+    def comparar_rotas(caminhos_com_custo, origem, destino):
+        if not caminhos_com_custo or len(caminhos_com_custo) < 2:
+            return
+
+        rotulos = []
+        custos = []
+
+        for i, (caminho, custo) in enumerate(caminhos_com_custo):
+            distancia = sum(seg.get_distancia() for seg in caminho)
+            rotulos.append(f"Rota {i+1}\n({distancia}m)")
+            custos.append(custo)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        barras = ax.bar(rotulos, custos, color='#3498db')
+        
+        indice_melhor = custos.index(min(custos))
+        barras[indice_melhor].set_color('#2ecc71')
+
+        ax.set_ylabel('Custo Total (Penalizações)')
+        ax.set_title(f'Comparação de Alternativas: {origem} -> {destino}', fontweight='bold')
+        ax.bar_label(barras, padding=3)
+        
+        plt.tight_layout()
+        plt.show()

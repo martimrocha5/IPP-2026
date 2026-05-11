@@ -36,6 +36,14 @@ class View:
 """)
 
     @staticmethod
+    def mostrar_boas_vindas(total_users):
+        print("\n============================================================")
+        print("    SISTEMA INICIADO: REDE BRAGA SAUDÁVEL ")
+        print(f"   Utilizadores Carregados: {total_users}")
+        print("    Malha Urbana Otimizada")
+        print("============================================================\n")
+
+    @staticmethod
     def mostrar_mapa():
         mapa = """
         ============================================================
@@ -60,29 +68,7 @@ class View:
         """
         print(mapa)
 
-    @staticmethod
-    def mostrar_resultado_rota(origem, destino, nome_utilizador, modo, caminho, custo):
-        print(f"\n{'='*60}")
-        print(f" ROTA CALCULADA: {origem} -> {destino}")
-        print(f" Utilizador: {nome_utilizador} |  Modo: {modo.upper()}")
-        print(f"{'='*60}")
 
-        if caminho:
-            print(f" Percurso Otimizado Encontrado!")
-            print(f" Índice de Custo (com penalizações): {custo:.1f}")
-
-            distancia_total = sum(seg.get_distancia() for seg in caminho)
-            print(f" Distância total: {distancia_total}m")
-
-            print("\n Itinerário Passo-a-Passo:")
-            for i, seg in enumerate(caminho, 1):
-                print(f"  {i}. {seg.get_origem()} -> {seg.get_destino()} ({seg.get_distancia()}m)")
-
-            print("\n Destino atingido com sucesso! 🏁")
-        else:
-            print(f"\n Aviso Crítico: Não foi possível encontrar um caminho seguro entre '{origem}' e '{destino}'.")
-
-        print(f"{'='*60}")
 
     @staticmethod
     def mostrar_detalhes_segmento(origem, destino, seg):
@@ -100,3 +86,45 @@ class View:
             print("-" * 50)
         else:
             print(f"\n Aviso: Não existe segmento direto registado entre '{origem}' e '{destino}'.")
+
+    @staticmethod
+    def mostrar_historico(utilizador):
+        historico = utilizador.get_historico()
+        print(f"\n---  Histórico de: {utilizador.get_nome()} ---")
+        if not historico:
+            print("Nenhum percurso registado até ao momento.")
+        else:
+            for i, (origem, destino, modo, custo) in enumerate(historico, 1):
+                print(f" {i}. {origem} -> {destino} | Modo: {modo.upper()} | Custo: {custo}")
+        print("--------------------------------------------------")
+
+    @staticmethod
+    def mostrar_perfil(utilizador):
+        print(f"\n---  Detalhes do Perfil ---")
+        print(f"ID: {utilizador.get_id()}")
+        print(f"Nome: {utilizador.get_nome()}")
+        print(f"Idade: {utilizador.get_idade()} anos")
+        print(f"Sexo: {utilizador.get_sexo()}")
+        print(f"Condição: {utilizador.get_perfil()}")
+        print("-----------------------------")
+
+    @staticmethod
+    def mostrar_resultado_rota(origem, destino, utilizador, modo, caminho, custo, motor_analise):
+        print(f"\n============================================================")
+        print(f" ROTA RECOMENDADA: {origem} -> {destino}")
+        print(f" Utilizador: {utilizador.get_nome()} |  Modo: {modo.upper()}")
+        print(f"============================================================")
+        
+        if caminho:
+            print(f" Percurso Otimizado Encontrado!")
+            print(f" Custo Total (Dijkstra): {custo}")
+            print("\n Itinerário Passo-a-Passo:")
+            
+            for i, seg in enumerate(caminho, 1):
+                conforto = motor_analise.calcular_indice_conforto(seg, utilizador, modo)
+                print(f"  {i}. {seg.get_origem()} -> {seg.get_destino()} ({seg.get_distancia()}m) [Conforto: {conforto}/100]")
+            
+            print("\n Destino atingido com sucesso!")
+        else:
+            print(f"\n Aviso: Não foi possível encontrar um caminho seguro.")
+        print(f"============================================================")

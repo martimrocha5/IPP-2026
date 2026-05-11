@@ -6,7 +6,7 @@ class MotorAnalise:
         self._regras_perfil = {
             "idoso": {
                 "inclinacao": 4,   
-                "ruido": 2         #
+                "ruido": 2         
             },
             "pessoa com mobilidade reduzida": {
                 "inclinacao": 6,          
@@ -48,6 +48,14 @@ class MotorAnalise:
 
         peso_final = peso_base + penalizacao
         return max(1, peso_final)  
+    
+    def calcular_indice_conforto(self, segmento, utilizador, modo="padrao"):
+        peso_base = segmento.get_distancia()
+        peso_final = self.calcular_peso_segmento(segmento, utilizador, modo)
+        
+        penalizacao = peso_final - peso_base
+        indice = max(0, 100 - (penalizacao / 5))
+        return round(indice, 1)
 
 
 class MotorRecomendacao:
@@ -84,3 +92,27 @@ class MotorRecomendacao:
                     heapq.heappush(fila_prioridade, (novo_custo, vizinho))
 
         return None, float('inf')
+    
+    def encontrar_todos_caminhos(self, rede, origem, destino, utilizador, modo="padrao"):
+        todos_caminhos = []
+        visitados = set()
+
+        def dfs(nodo_atual, caminho_atual, custo_atual):
+            if nodo_atual == destino:
+                todos_caminhos.append((list(caminho_atual), custo_atual))
+                return
+            
+            visitados.add(nodo_atual)
+            
+            for segmento in rede.obter_conexoes(nodo_atual):
+                vizinho = segmento.get_destino()
+                if vizinho not in visitados:
+                    peso = self._motor.calcular_peso_segmento(segmento, utilizador, modo)
+                    caminho_atual.append(segmento)
+                    dfs(vizinho, caminho_atual, custo_atual + peso)
+                    caminho_atual.pop()
+            
+            visitados.remove(nodo_atual)
+
+        dfs(origem, [], 0)
+        return todos_caminhos

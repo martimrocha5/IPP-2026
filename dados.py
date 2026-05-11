@@ -5,25 +5,31 @@ class Utilizador:
         self._idade = idade
         self._sexo = sexo
         self._perfil = perfil
+        self._historico = []
 
     def get_id(self):
         return self._id
 
     def get_nome(self):
         return self._nome
-
-    def get_idade(self):
-        return self._idade
-
-    def get_sexo(self):
-        return self._sexo
-
+        
     def get_perfil(self):
         return self._perfil
 
+    def get_idade(self):
+        return self._idade
+        
+    def get_sexo(self):
+        return self._sexo
+
+    def adicionar_historico(self, origem, destino, modo, custo):
+        self._historico.append((origem, destino, modo, custo))
+
+    def get_historico(self):
+        return self._historico
+
     def __str__(self):
         return f"[{self._id}] {self._nome} | {self._idade} anos | Sexo: {self._sexo} | Perfil: {self._perfil}"
-
 
 class Segmento:
     def __init__(self, origem, destino, distancia, temp, ar, ruido, zonas_verdes, inclinacao, pavimento, passadeiras, iluminacao):
