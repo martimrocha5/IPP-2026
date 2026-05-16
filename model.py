@@ -1,6 +1,11 @@
 import heapq
 
 class MotorAnalise:
+    """Motor de análise para cálculo de índices de conforto baseados em variáveis ambientais e de acessibilidade.
+    
+    Aplica penalizações e valorizações conforme o perfil do utilizador e modo de deslocação escolhido.
+    """
+    
     def __init__(self):
 
         self._regras_perfil = {
@@ -25,6 +30,16 @@ class MotorAnalise:
         }
 
     def calcular_peso_segmento(self, segmento, utilizador, modo="padrao"):
+        """Calcula o peso de um segmento aplicando penalizações conforme o perfil e modo.
+        
+        Args:
+            segmento: Segmento de rua
+            utilizador: Utilizador (perfil influencia cálculo)
+            modo: Modo de deslocação (padrao, relaxar, exercicio, ar_puro)
+            
+        Returns:
+            float: Peso final do segmento (distância + penalizações)
+        """
         peso_base = segmento.get_distancia()
         penalizacao = 0
         perfil = utilizador.get_perfil().lower()
@@ -50,6 +65,16 @@ class MotorAnalise:
         return max(1, peso_final)  
     
     def calcular_indice_conforto(self, segmento, utilizador, modo="padrao"):
+        """Calcula um índice de conforto (0-100) para um segmento.
+        
+        Args:
+            segmento: Segmento de rua
+            utilizador: Utilizador
+            modo: Modo de deslocação
+            
+        Returns:
+            float: Índice de conforto (0-100)
+        """
         peso_base = segmento.get_distancia()
         peso_final = self.calcular_peso_segmento(segmento, utilizador, modo)
         
@@ -59,10 +84,27 @@ class MotorAnalise:
 
 
 class MotorRecomendacao:
+    """Motor de recomendação de percursos usando algoritmos Dijkstra e DFS.
+    
+    Encontra a melhor rota ou múltiplas alternativas entre dois pontos na rede urbana.
+    """
+    
     def __init__(self, motor_analise):
         self._motor = motor_analise
 
     def encontrar_melhor_caminho(self, rede, origem, destino, utilizador, modo="padrao"):
+        """Encontra o melhor caminho usando algoritmo Dijkstra.
+        
+        Args:
+            rede: RedeUrbana
+            origem: Ponto inicial
+            destino: Ponto final
+            utilizador: Utilizador (influencia cálculo de peso)
+            modo: Modo de deslocação
+            
+        Returns:
+            tuple: (caminho, custo) ou (None, inf) se não houver caminho
+        """
         distancias = {origem: 0}
         caminhos = {origem: []}
         fila_prioridade = [(0, origem)]
@@ -93,26 +135,43 @@ class MotorRecomendacao:
 
         return None, float('inf')
     
-    def encontrar_todos_caminhos(self, rede, origem, destino, utilizador, modo="padrao"):
+    def encontrar_todos_caminhos(self, rede, origem, destino, utilizador, modo="padrao", max_caminhos=10):
+        """Encontra múltiplos caminhos entre origem e destino usando DFS com limite.
+        
+        Args:
+            rede: RedeUrbana
+            origem: Ponto inicial
+            destino: Ponto final
+            utilizador: Utilizador para cálculo de peso
+            modo: Modo de deslocação (padrao, relaxar, exercicio, ar_puro)
+            max_caminhos: Limite de caminhos a encontrar (evita busca infinita)
+            
+        Returns:
+            Lista de tuplos (caminho, custo)
+        """
         todos_caminhos = []
-        visitados = set()
-
-        def dfs(nodo_atual, caminho_atual, custo_atual):
+        
+        def dfs(nodo_atual, caminho_atual, custo_atual, visitados_locais):
+            # Limite de caminhos encontrados
+            if len(todos_caminhos) >= max_caminhos:
+                return
+                
             if nodo_atual == destino:
                 todos_caminhos.append((list(caminho_atual), custo_atual))
                 return
             
-            visitados.add(nodo_atual)
+            # Adicionar à lista local para esta recursão
+            visitados_locais.add(nodo_atual)
             
             for segmento in rede.obter_conexoes(nodo_atual):
                 vizinho = segmento.get_destino()
-                if vizinho not in visitados:
+                if vizinho not in visitados_locais:
                     peso = self._motor.calcular_peso_segmento(segmento, utilizador, modo)
                     caminho_atual.append(segmento)
-                    dfs(vizinho, caminho_atual, custo_atual + peso)
+                    dfs(vizinho, caminho_atual, custo_atual + peso, visitados_locais.copy())
                     caminho_atual.pop()
             
-            visitados.remove(nodo_atual)
+            visitados_locais.discard(nodo_atual)
 
-        dfs(origem, [], 0)
-        return todos_caminhos
+        dfs(origem, [], 0, set())
+        return sorted(todos_caminhos, key=lambda x: x[1])  # Ordena por custo

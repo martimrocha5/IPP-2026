@@ -60,5 +60,57 @@ class ArvoreUtilizadores:
             resultado.append(nodo.get_utilizador())
             self._inorder(nodo._dir, resultado)
 
+    def remover(self, id_utilizador):
+        """Remove um utilizador da árvore por ID.
+        
+        Args:
+            id_utilizador: ID do utilizador a remover.
+            
+        Returns:
+            bool: True se removido com sucesso, False se não encontrado.
+        """
+        self._raiz, removido = self._remover_recursivo(self._raiz, id_utilizador)
+        if removido:
+            self._tamanho -= 1
+        return removido
+
+    def _remover_recursivo(self, nodo, id_utilizador):
+        """Remove um nodo da árvore recursivamente."""
+        if nodo is None:
+            return None, False
+
+        nodo_id = nodo.get_utilizador().get_id()
+
+        if id_utilizador < nodo_id:
+            nodo._esq, removido = self._remover_recursivo(nodo._esq, id_utilizador)
+            return nodo, removido
+        elif id_utilizador > nodo_id:
+            nodo._dir, removido = self._remover_recursivo(nodo._dir, id_utilizador)
+            return nodo, removido
+        else:
+            # Nodo encontrado - remover
+            if nodo._esq is None:
+                return nodo._dir, True
+            elif nodo._dir is None:
+                return nodo._esq, True
+            else:
+                # Nodo com dois filhos: encontrar sucessor inorder
+                pai_sucessor = nodo
+                sucessor = nodo._dir
+                while sucessor._esq is not None:
+                    pai_sucessor = sucessor
+                    sucessor = sucessor._esq
+                
+                nodo_novo = type(nodo)(sucessor.get_utilizador())
+                nodo_novo._esq = nodo._esq
+                
+                if pai_sucessor == nodo:
+                    nodo_novo._dir = nodo._dir._remover_recursivo(nodo._dir._dir, sucessor.get_utilizador().get_id())
+                else:
+                    pai_sucessor._esq, _ = self._remover_recursivo(pai_sucessor._esq, sucessor.get_utilizador().get_id())
+                    nodo_novo._dir = nodo._dir
+                
+                return nodo_novo, True
+
     def __len__(self):
         return self._tamanho

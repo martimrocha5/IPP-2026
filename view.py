@@ -1,37 +1,47 @@
 class View:
+    """Interface de visualização para o sistema de recomendação de percursos."""
+    
+    ITENS_POR_PAGINA = 10  # Limite de itens por página
     @staticmethod
     def mostrar_ajuda():
         print("""
 ============================================================
                    COMANDOS DISPONÍVEIS
 ============================================================
-  ins_utilizador <nome> <perfil>
+DADOS:
+  ins_utilizador <nome> <idade> <sexo> <perfil>
       Regista um novo utilizador.
-      Perfis: idoso | adulto saudável | pessoa com mobilidade reduzida
+      Perfis: idoso | pessoa com mobilidade reduzida | adulto saudável
 
   ins_percurso <origem> <destino> <dist> <temp> <ar> <ruido>
-               <verdes> <inclinacao> <pavimento> <passadeiras> <iluminacao>
-      Regista um novo segmento de percurso na rede urbana.
+               <verdes> <inclinacao> <pav> <passadeiras> <ilum>
+      Regista um novo segmento de percurso.
 
-  list percursos          Lista todos os segmentos da rede urbana.
-  list utilizadores       Lista todos os utilizadores registados.
+  list percursos [pagina]        Lista percursos com paginação (10/página)
+  list utilizadores [pagina]     Lista utilizadores com paginação
 
-  ver <origem> <destino>  Mostra os detalhes de um segmento específico.
+CONSULTA:
+  ver <origem> <destino>         Mostra detalhes de um segmento
+  procurar <id_utilizador>       Mostra perfil de utilizador
+  historico <id_utilizador>      Mostra histórico de percursos
 
+RECOMENDAÇÃO:
   recomendar <origem> <destino> <id_utilizador> [modo]
-      Calcula a melhor rota para o utilizador.
+      Calcula melhor rota para o utilizador.
       Modos: padrao | relaxar | exercicio | ar_puro
 
-  mapa                    Mostra o mapa textual da rede urbana.
+VISUALIZAÇÃO:
+  mapa                           Mostra mapa textual da rede
+  estatisticas                   Gera gráficos ambientais
+  analise_utilizadores           Análise dos utilizadores
 
-  estatisticas [cidade | utilizadores]
-      Gera gráficos de análise ambiental ou dos utilizadores.
+FICHEIROS:
+  gravar <ficheiro>              Grava dados em JSON
+  ler <ficheiro>                 Carrega dados de JSON
 
-  ler <ficheiro>          Carrega utilizadores de um ficheiro JSON.
-  gravar <ficheiro>       Guarda todos os utilizadores num ficheiro JSON.
-
-  ajuda                   Mostra esta mensagem.
-  sair                    Encerra o programa.
+SISTEMA:
+  ajuda                          Mostra esta mensagem
+  sair                           Encerra o programa
 ============================================================
 """)
 
@@ -128,3 +138,81 @@ class View:
         else:
             print(f"\n Aviso: Não foi possível encontrar um caminho seguro.")
         print(f"============================================================")
+
+    @staticmethod
+    def listar_percursos_paginado(rede, pagina=1):
+        """Lista segmentos de rua com paginação."""
+        ruas_vistas = set()
+        percursos = []
+        
+        for origem, conexoes in rede._grafo.items():
+            for seg in conexoes:
+                destino = seg.get_destino()
+                id_rua = tuple(sorted([origem, destino]))
+                
+                if id_rua not in ruas_vistas:
+                    ruas_vistas.add(id_rua)
+                    percursos.append(seg)
+        
+        if not percursos:
+            print("Nenhum percurso registado.")
+            return
+        
+        total_paginas = (len(percursos) + View.ITENS_POR_PAGINA - 1) // View.ITENS_POR_PAGINA
+        
+        if pagina < 1 or pagina > total_paginas:
+            print(f"✗ Página inválida. Total de páginas: {total_paginas}")
+            return
+        
+        inicio = (pagina - 1) * View.ITENS_POR_PAGINA
+        fim = min(inicio + View.ITENS_POR_PAGINA, len(percursos))
+        
+        print("\n" + "="*70)
+        print(f"LISTA DE PERCURSOS (Página {pagina}/{total_paginas})")
+        print("="*70)
+        
+        for i, seg in enumerate(percursos[inicio:fim], start=inicio+1):
+            print(f"\n{i}. {seg.get_origem()} → {seg.get_destino()}")
+            print(f"   Distância: {seg.get_distancia()}m")
+            print(f"   Ambiente: Temp {seg.get_temperatura()}ºC | Ar {seg.get_qualidade_ar()} | Ruído {seg.get_ruido()}")
+            print(f"   Acessibilidade: Inclinação {seg.get_inclinacao()}° | Pavimento {seg.get_pavimento()}")
+        
+        print("\n" + "="*70)
+        if pagina < total_paginas:
+            print(f"Use: list percursos {pagina+1} para próxima página")
+        if pagina > 1:
+            print(f"Use: list percursos {pagina-1} para página anterior")
+        print("="*70)
+
+    @staticmethod
+    def listar_utilizadores_paginado(arvore, pagina=1):
+        """Lista utilizadores com paginação."""
+        todos = arvore.listar_todos()
+        
+        if not todos:
+            print("Nenhum utilizador registado.")
+            return
+        
+        total_paginas = (len(todos) + View.ITENS_POR_PAGINA - 1) // View.ITENS_POR_PAGINA
+        
+        if pagina < 1 or pagina > total_paginas:
+            print(f"✗ Página inválida. Total de páginas: {total_paginas}")
+            return
+        
+        inicio = (pagina - 1) * View.ITENS_POR_PAGINA
+        fim = min(inicio + View.ITENS_POR_PAGINA, len(todos))
+        
+        print("\n" + "="*70)
+        print(f"LISTA DE UTILIZADORES (Página {pagina}/{total_paginas} - Total: {len(todos)})")
+        print("="*70)
+        
+        for i, user in enumerate(todos[inicio:fim], start=inicio+1):
+            print(f"{i}. {user}")
+        
+        print("\n" + "="*70)
+        if pagina < total_paginas:
+            print(f"Use: list utilizadores {pagina+1} para próxima página")
+        if pagina > 1:
+            print(f"Use: list utilizadores {pagina-1} para página anterior")
+        print("="*70)
+
