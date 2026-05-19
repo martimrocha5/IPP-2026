@@ -75,4 +75,4 @@ def gerar_dataset_utilizadores(quantidade, nome_ficheiro="dataset_utilizadores.j
 
 # Protege a execução automática quando o módulo é importado por outros ficheiros
 if __name__ == "__main__":
-    gerar_dataset_utilizadores(1000)
+    gerar_dataset_utilizadores(50)

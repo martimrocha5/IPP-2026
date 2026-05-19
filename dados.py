@@ -67,7 +67,7 @@ class Segmento:
     """
 
     def __init__(self, origem, destino, distancia, temp, ar, ruido,
-                 zonas_verdes, inclinacao, pavimento, passadeiras, iluminacao):
+                 zonas_verdes, inclinacao, pavimento, passadeiras, iluminacao, acidente=False):
         """
         Inicializa um segmento com validação dos valores críticos.
 
@@ -106,6 +106,7 @@ class Segmento:
         self._pavimento     = pavimento
         self._passadeiras   = passadeiras
         self._iluminacao    = iluminacao
+        self._acidente      = acidente
 
     # ── Getters ──────────────────────────────────────────────────────────────
     def get_origem(self):        return self._origem
@@ -119,6 +120,10 @@ class Segmento:
     def get_pavimento(self):     return self._pavimento
     def get_passadeiras(self):   return self._passadeiras
     def get_iluminacao(self):    return self._iluminacao
+    def get_acidente(self):      return self._acidente
+
+    def set_acidente(self, estado):
+        self._acidente = estado
 
     def __str__(self):
         return f"Segmento de {self._origem} para {self._destino} ({self._distancia}m)"
@@ -173,13 +178,54 @@ class RedeUrbana:
             -segmento.get_inclinacao(),   # ← inversão correta
             segmento.get_pavimento(),
             segmento.get_passadeiras(),
-            segmento.get_iluminacao()
+            segmento.get_iluminacao(),
+            segmento.get_acidente()
         )
         self._grafo[destino].append(segmento_inverso)
+
+    def reportar_acidente(self, origem, destino, estado):
+        """Marca ou desmarca um segmento como tendo um acidente, bloqueando o caminho."""
+        marcado = False
+        if origem in self._grafo:
+            for seg in self._grafo[origem]:
+                if seg.get_destino() == destino:
+                    seg.set_acidente(estado)
+                    marcado = True
+        if destino in self._grafo:
+            for seg in self._grafo[destino]:
+                if seg.get_destino() == origem:
+                    seg.set_acidente(estado)
+                    marcado = True
+        return marcado
 
     def obter_conexoes(self, ponto):
         """Retorna a lista de segmentos que partem de um dado ponto."""
         return self._grafo.get(ponto, [])
+
+    def verificar_conectividade_sem_acidentes(self):
+        """
+        Verifica se a rede de transportes continua totalmente conectada 
+        (todos os nós conseguem chegar a todos os outros) considerando 
+        apenas as vias sem acidentes (desbloqueadas).
+        """
+        pontos = list(self._grafo.keys())
+        if not pontos:
+            return True
+            
+        start_node = pontos[0]
+        visited = {start_node}
+        queue = [start_node]
+        
+        while queue:
+            node = queue.pop(0)
+            for seg in self._grafo.get(node, []):
+                if not seg.get_acidente():
+                    dest = seg.get_destino()
+                    if dest not in visited:
+                        visited.add(dest)
+                        queue.append(dest)
+                        
+        return len(visited) == len(pontos)
 
     def remover_segmento(self, origem, destino):
         """Remove um segmento bidirecional da rede (remove em ambas as direções).

@@ -6,15 +6,24 @@ Orquestra a interação entre os módulos de dados, modelo e vista.
 from dados import Utilizador, Segmento, RedeUrbana
 import json
 import random
+import sys
 from model import MotorAnalise, MotorRecomendacao
 from arvores import ArvoreUtilizadores
 from view import View
 from graficos import VisualizacaoDados
+from mapa_braga import carregar_mapa_expandido
+
+if sys.platform.startswith("win"):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
 
 
 # Perfis aceites pelo sistema
 PERFIS_VALIDOS = ["idoso", "adulto saudável", "pessoa com mobilidade reduzida"]
-MODOS_VALIDOS  = ["padrao", "relaxar", "exercicio", "ar_puro"]
+MODOS_VALIDOS  = ["padrao", "relaxar", "exercicio", "ar_puro", "trabalho"]
 
 
 def inicializar_rede(rede):
@@ -73,11 +82,11 @@ def carregar_utilizadores(utilizadores, ficheiro):
             print()
 
     except FileNotFoundError:
-        print(f"❌ Ficheiro '{ficheiro}' não encontrado.")
+        print(f" Ficheiro '{ficheiro}' não encontrado.")
     except json.JSONDecodeError:
-        print(f"❌ O ficheiro '{ficheiro}' não é um JSON válido.")
+        print(f" O ficheiro '{ficheiro}' não é um JSON válido.")
     except Exception as e:
-        print(f"❌ Erro inesperado ao ler ficheiro: {e}")
+        print(f" Erro inesperado ao ler ficheiro: {e}")
 
 
 def gravar_utilizadores(utilizadores, ficheiro):
@@ -102,9 +111,9 @@ def gravar_utilizadores(utilizadores, ficheiro):
     try:
         with open(ficheiro, 'w', encoding='utf-8') as f:
             json.dump(dados, f, ensure_ascii=False, indent=4)
-        print(f"✅ {len(dados)} utilizadores gravados em '{ficheiro}'.")
+        print(f" {len(dados)} utilizadores gravados em '{ficheiro}'.")
     except Exception as e:
-        print(f"❌ Erro ao gravar ficheiro: {e}")
+        print(f" Erro ao gravar ficheiro: {e}")
 
 
 def gerar_id_unico(utilizadores):
@@ -152,9 +161,9 @@ class Auditoria:
             with open(ficheiro, 'w', encoding='utf-8') as f:
                 for registo in self._registos:
                     f.write(registo + "\n")
-            print(f"✅ Auditoria exportada para '{ficheiro}' ({len(self._registos)} registos).")
+            print(f" Auditoria exportada para '{ficheiro}' ({len(self._registos)} registos).")
         except Exception as e:
-            print(f"❌ Erro ao exportar auditoria: {e}")
+            print(f" Erro ao exportar auditoria: {e}")
     
     def listar_ultimos(self, n=10):
         """Lista os últimos N registos de auditoria."""
@@ -173,55 +182,55 @@ class Auditoria:
 def processar_remover_utilizador(partes, utilizadores, auditoria):
     """Remove um utilizador do sistema."""
     if len(partes) != 2:
-        print("❌ Formato inválido. Utiliza: remover_utilizador <id>")
+        print(" Formato inválido. Utiliza: remover_utilizador <id>")
         return
     
     id_utilizador = partes[1]
     user = utilizadores.procurar(id_utilizador)
     
     if user is None:
-        print(f"❌ Utilizador '{id_utilizador}' não encontrado.")
+        print(f" Utilizador '{id_utilizador}' não encontrado.")
         auditoria.registar("remover_utilizador", f"ID '{id_utilizador}'", sucesso=False)
         return
     
     if utilizadores.remover(id_utilizador):
-        print(f"✅ Utilizador '{user.get_nome()}' ({id_utilizador}) removido com sucesso.")
+        print(f" Utilizador '{user.get_nome()}' ({id_utilizador}) removido com sucesso.")
         auditoria.registar("remover_utilizador", f"{id_utilizador} - {user.get_nome()}", sucesso=True)
     else:
-        print(f"❌ Não foi possível remover o utilizador '{id_utilizador}'.")
+        print(f" Não foi possível remover o utilizador '{id_utilizador}'.")
         auditoria.registar("remover_utilizador", f"ID '{id_utilizador}'", sucesso=False)
 
 
 def processar_remover_percurso(partes, rede, auditoria):
     """Remove um percurso da rede."""
     if len(partes) != 3:
-        print("❌ Formato inválido. Utiliza: remover_percurso <origem> <destino>")
+        print(" Formato inválido. Utiliza: remover_percurso <origem> <destino>")
         return
     
     origem, destino = partes[1], partes[2]
     
     if not rede.contem_ponto(origem):
-        print(f"❌ Ponto '{origem}' não existe na rede.")
+        print(f" Ponto '{origem}' não existe na rede.")
         auditoria.registar("remover_percurso", f"{origem} → {destino}", sucesso=False)
         return
     
     if not rede.contem_ponto(destino):
-        print(f"❌ Ponto '{destino}' não existe na rede.")
+        print(f" Ponto '{destino}' não existe na rede.")
         auditoria.registar("remover_percurso", f"{origem} → {destino}", sucesso=False)
         return
     
     if rede.remover_segmento(origem, destino):
-        print(f"✅ Percurso '{origem}' → '{destino}' removido com sucesso (ambas as direções).")
+        print(f" Percurso '{origem}' → '{destino}' removido com sucesso (ambas as direções).")
         auditoria.registar("remover_percurso", f"{origem} ↔ {destino}", sucesso=True)
     else:
-        print(f"❌ Percurso '{origem}' → '{destino}' não encontrado.")
+        print(f" Percurso '{origem}' → '{destino}' não encontrado.")
         auditoria.registar("remover_percurso", f"{origem} → {destino}", sucesso=False)
 
 
 def processar_editar_utilizador(partes, utilizadores, auditoria):
     """Edita dados de um utilizador."""
     if len(partes) < 4:
-        print("❌ Formato inválido.")
+        print("  Formato inválido.")
         print("   Utiliza: editar_utilizador <id> <campo> <novo_valor>")
         print("   Campos: nome | idade | sexo | perfil")
         return
@@ -232,7 +241,7 @@ def processar_editar_utilizador(partes, utilizadores, auditoria):
     
     user = utilizadores.procurar(id_utilizador)
     if user is None:
-        print(f"❌ Utilizador '{id_utilizador}' não encontrado.")
+        print(f" Utilizador '{id_utilizador}' não encontrado.")
         auditoria.registar("editar_utilizador", f"ID '{id_utilizador}' - não encontrado", sucesso=False)
         return
     
@@ -253,13 +262,13 @@ def processar_editar_utilizador(partes, utilizadores, auditoria):
                 raise ValueError(f"Perfil deve ser um de: {', '.join(PERFIS_VALIDOS)}")
             user._perfil = novo_valor.lower()
         else:
-            print(f"❌ Campo '{campo}' desconhecido.")
+            print(f" Campo '{campo}' desconhecido.")
             return
         
-        print(f"✅ Utilizador '{id_utilizador}' atualizado: {campo} = '{novo_valor}'")
+        print(f" Utilizador '{id_utilizador}' atualizado: {campo} = '{novo_valor}'")
         auditoria.registar("editar_utilizador", f"{id_utilizador} - {campo}='{novo_valor}'", sucesso=True)
     except Exception as e:
-        print(f"❌ Erro ao editar: {e}")
+        print(f" Erro ao editar: {e}")
         auditoria.registar("editar_utilizador", f"{id_utilizador} - erro: {e}", sucesso=False)
 
 
@@ -269,8 +278,10 @@ def main():
     utilizadores = ArvoreUtilizadores()
     motor_analise = MotorAnalise()
     motor_recomendacao = MotorRecomendacao(motor_analise)
+    clima_atual = "Sol"
 
     inicializar_rede(rede)
+    carregar_mapa_expandido(rede)
     carregar_utilizadores(utilizadores, "dataset_utilizadores.json")
     View.mostrar_boas_vindas(len(utilizadores))
 
@@ -290,6 +301,7 @@ def main():
                     destino         = partes[2]
                     id_utilizador   = partes[3]
                     modo_escolhido  = partes[4] if len(partes) > 4 else "padrao"
+                    acompanhante    = " ".join(partes[5:]) if len(partes) > 5 else "Nenhum"
 
                     if modo_escolhido not in MODOS_VALIDOS:
                         print(f"❌ Modo '{modo_escolhido}' inválido. Modos disponíveis: {' | '.join(MODOS_VALIDOS)}")
@@ -310,15 +322,30 @@ def main():
                     user_atual = utilizadores.procurar(id_utilizador)
                     if user_atual is not None:
                         caminho, custo = motor_recomendacao.encontrar_melhor_caminho(
-                            rede, origem, destino, user_atual, modo_escolhido
+                            rede, origem, destino, user_atual, modo_escolhido, acompanhante, clima_atual
                         )
+                        if caminho:
+                            distancia_total = sum(seg.get_distancia() for seg in caminho)
+                            inclinacao_abs = sum(abs(seg.get_inclinacao()) for seg in caminho)
+                            velocidade_kmh = 4.0
+                            if user_atual.get_perfil() in ["idoso", "pessoa com mobilidade reduzida"]: velocidade_kmh -= 1.5
+                            if acompanhante in ["Cadeira de Rodas", "Andarilho"]: velocidade_kmh -= 1.0
+                            velocidade_kmh = max(1.0, velocidade_kmh)
+                            tempo_minutos = int(((distancia_total / 1000.0) / velocidade_kmh) * 60)
+                            calorias_base = (distancia_total / 1000.0) * 50
+                            if modo_escolhido == "exercicio": calorias_base *= 1.5
+                            calorias = int(calorias_base + inclinacao_abs * 2)
+
+                            print(f"\n[CLIMA: {clima_atual}] ⏱️ Tempo: ~{tempo_minutos} min | 🔥 Calorias: ~{calorias} kcal")
+                            
                         View.mostrar_resultado_rota(
                             origem, destino, user_atual, modo_escolhido, caminho, custo, motor_analise
                         )
                         if caminho:
                             user_atual.adicionar_historico(origem, destino, modo_escolhido, custo)
+                            gravar_utilizadores(utilizadores, "dataset_utilizadores.json") # Auto-save
                             todas_rotas = motor_recomendacao.encontrar_todos_caminhos(
-                                rede, origem, destino, user_atual, modo_escolhido
+                                rede, origem, destino, user_atual, modo_escolhido, 10, acompanhante, clima_atual
                             )
                             if len(todas_rotas) > 1:
                                 VisualizacaoDados.comparar_rotas(todas_rotas, origem, destino)
@@ -326,7 +353,7 @@ def main():
                         print(f"❌ Utilizador com ID '{id_utilizador}' não encontrado.")
                 else:
                     print("❌ Formato inválido.")
-                    print("   Utiliza: recomendar <origem> <destino> <id_utilizador> [modo]")
+                    print("   Utiliza: recomendar <origem> <destino> <id_utilizador> [modo] [acompanhante]")
                     print(f"   Modos: {' | '.join(MODOS_VALIDOS)}")
 
             # ── LIST ─────────────────────────────────────────────────────────
@@ -467,8 +494,10 @@ def main():
                     VisualizacaoDados.raio_x_cidade(rede)
                 elif sub == "utilizadores":
                     VisualizacaoDados.analise_utilizadores(utilizadores)
+                elif sub == "percursos":
+                    VisualizacaoDados.estatisticas_percursos(utilizadores, rede)
                 else:
-                    print("❌ Opção inválida. Utiliza: estatisticas [cidade | utilizadores]")
+                    print("❌ Opção inválida. Utiliza: estatisticas [cidade | utilizadores | percursos]")
 
             # ── ANALISE_UTILIZADORES (atalho) ─────────────────────────────────
             elif comando == "analise_utilizadores":
@@ -487,6 +516,83 @@ def main():
                     carregar_utilizadores(utilizadores, partes[1])
                 else:
                     print("❌ Formato inválido. Utiliza: ler <ficheiro>")
+
+            # ── CLIMA ────────────────────────────────────────────────────────
+            elif comando == "clima":
+                if clima_atual == "Sol":
+                    clima_atual = "Noite"
+                    print("🌙 Período alterado para: Noite. A iluminação pública das ruas é agora crítica!")
+                elif clima_atual == "Noite":
+                    clima_atual = "Chuva"
+                    print("🌧️ O tempo mudou! Está a chover em Braga. Ruas com piso irregular estão perigosas.")
+                else:
+                    clima_atual = "Sol"
+                    print("☀️ O tempo mudou! O sol brilha em Braga. Piso irregular mais seguro.")
+
+            # ── ACIDENTES ────────────────────────────────────────────────────
+            elif comando == "acidentes":
+                # Limpar antigos
+                for conexoes in rede._grafo.values():
+                    for seg in conexoes:
+                        seg.set_acidente(False)
+                todas_ruas = []
+                ruas_vistas = set()
+                for o, conexoes in rede._grafo.items():
+                    for seg in conexoes:
+                        d = seg.get_destino()
+                        id_rua = tuple(sorted([o, d]))
+                        if id_rua not in ruas_vistas:
+                            ruas_vistas.add(id_rua)
+                            todas_ruas.append((o, d))
+                if todas_ruas:
+                    # Embaralhar para obter aleatoriedade
+                    random.shuffle(todas_ruas)
+                    num_acidentes_desejados = random.randint(1, 3)
+                    acidentes_gerados = 0
+                    
+                    print("\n⚠️ GERAR ACIDENTES ALEATÓRIOS...")
+                    for o, d in todas_ruas:
+                        if acidentes_gerados >= num_acidentes_desejados:
+                            break
+                        
+                        # Tentar bloquear temporariamente
+                        rede.reportar_acidente(o, d, True)
+                        if rede.verificar_conectividade_sem_acidentes():
+                            # Mantém bloqueado
+                            print(f" ⛔ Acidente bloqueou: {o} <-> {d}!")
+                            acidentes_gerados += 1
+                        else:
+                            # Reverter
+                            rede.reportar_acidente(o, d, False)
+                            
+                    if acidentes_gerados == 0:
+                        print("💡 Não foi possível gerar acidentes sem isolar partes da cidade.")
+                    else:
+                        print(f"✅ Simulação atualizada com {acidentes_gerados} acidentes.\n")
+
+            # ── EXPORTAR ─────────────────────────────────────────────────────
+            elif comando == "exportar":
+                if len(partes) == 2:
+                    id_user = partes[1]
+                    u = utilizadores.procurar(id_user)
+                    if u:
+                        import csv
+                        filename = f"relatorio_{u.get_nome().replace(' ', '_')}.csv"
+                        try:
+                            with open(filename, 'w', newline='', encoding='utf-8-sig') as f:
+                                writer = csv.writer(f, delimiter=';')
+                                writer.writerow(["ID", u.get_id()])
+                                writer.writerow(["Nome", u.get_nome()])
+                                writer.writerow(["Histórico de Viagens"])
+                                for h in u.get_historico():
+                                    if len(h) == 4: writer.writerow([h[0], h[1], h[2], h[3]])
+                            print(f"✅ CSV exportado para '{filename}'")
+                        except Exception as e:
+                            print(f"❌ Erro ao exportar CSV: {e}")
+                    else:
+                        print(f"❌ Utilizador '{id_user}' não encontrado.")
+                else:
+                    print("❌ Utiliza: exportar <id_utilizador>")
 
             # ── AJUDA ────────────────────────────────────────────────────────
             elif comando == "ajuda":
