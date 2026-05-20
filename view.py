@@ -9,36 +9,52 @@ class View:
                    COMANDOS DISPONÍVEIS
 ============================================================
 DADOS:
-  ins_utilizador <nome> <idade> <sexo> <perfil>
-      Regista um novo utilizador.
+  ins_utilizador <nome> [idade] [sexo] <perfil>
+      Regista um novo utilizador. Aceita formatos:
+        - Simplificado: ins_utilizador <nome> <perfil> (idade default: 30)
+        - Completo:     ins_utilizador <nome> <idade> <sexo> <perfil>
       Perfis: idoso | pessoa com mobilidade reduzida | adulto saudável
 
-  ins_percurso <origem> <destino> <dist> <temp> <ar> <ruido>
-               <verdes> <inclinacao> <pav> <passadeiras> <ilum>
-      Regista um novo segmento de percurso.
+  ins_percurso <origem> <destino> [outros_indicadores...]
+      Regista um novo segmento de percurso. Aceita formatos:
+        - Simplificado: ins_percurso <origem>-<destino> ou <origem> <destino>
+        - Completo:     ins_percurso <origem> <destino> <dist> <temp> <ar> <ruido>
+                                     <verdes> <inclinacao> <pav> <passadeiras> <ilum>
+
+  editar_utilizador <id> <campo> <novo_valor>
+      Edita dados de um utilizador. Campos: nome | idade | sexo | perfil
+
+  remover_utilizador <id>        Remove um utilizador da base de dados
+  remover_percurso <ori> <dest>  Remove um percurso da rede urbana
 
   list percursos [pagina]        Lista percursos com paginação (10/página)
   list utilizadores [pagina]     Lista utilizadores com paginação
 
 CONSULTA:
-  ver <origem> <destino>         Mostra detalhes de um segmento
+  ver [argumentos...]            Mostra percurso ou abre janela gráfica:
+        - ver (sem argumentos):  Abre a janela gráfica (GUI) e desenha o mapa
+        - ver <origem>-<destino> (formato percurso com hífen ou seta)
+        - ver <origem> <destino> (formato clássico)
   procurar <id_utilizador>       Mostra perfil de utilizador
   historico <id_utilizador>      Mostra histórico de percursos
 
 RECOMENDAÇÃO:
-  recomendar <origem> <destino> <id_utilizador> [modo] [acompanhante]
-      Calcula a melhor rota para o utilizador.
+  recomendar <origem> <destino> <id_ou_perfil> [modo] [acompanhante]
+      Calcula a melhor rota para o utilizador ou perfil genérico.
       Modos: padrao | relaxar | exercicio | ar_puro | trabalho
       Acompanhantes: Cadeira de Rodas | Carrinho de Bebé | Andarilho | Carrinho de Mão | Carrinho de Compras | Mala com Rodas
 
-VISUALIZAÇÃO:
+SIMULAÇÃO & VISUALIZAÇÃO:
   mapa                           Mostra mapa textual da rede
-  estatisticas                   Gera gráficos ambientais
-  analise_utilizadores           Análise dos utilizadores
+  clima                          Altera dinamicamente o clima (Sol -> Noite -> Chuva -> Noite_Chuva)
+  acidentes                      Gera acidentes aleatórios nas ruas sem isolar pontos
+  estatisticas                   Gera gráficos ambientais e de uso (cidade | utilizadores | percursos)
+  analise_utilizadores           Análise estatística dos perfis na árvore BSP
 
 FICHEIROS:
-  gravar <ficheiro>              Grava dados em JSON
-  ler <ficheiro>                 Carrega dados de JSON
+  gravar <ficheiro>              Grava dados do sistema em JSON
+  ler <ficheiro>                 Carrega dados do sistema de JSON
+  exportar <id_utilizador>       Gera relatório CSV detalhado do utilizador e seu histórico
 
 SISTEMA:
   ajuda                          Mostra esta mensagem

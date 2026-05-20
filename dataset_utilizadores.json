@@ -350,6 +350,13 @@
         "perfil": "idoso"
     },
     {
+        "id": "U36571",
+        "nome": "Ana de Silva",
+        "idade": 72,
+        "sexo": "F",
+        "perfil": "idoso"
+    },
+    {
         "id": "U40482",
         "nome": "Tomás Cruz",
         "idade": 30,
@@ -368,6 +375,13 @@
         "nome": "Ana de Silva",
         "idade": 72,
         "sexo": "F",
+        "perfil": "idoso"
+    },
+    {
+        "id": "U79706",
+        "nome": "Tomás Cruz",
+        "idade": 30,
+        "sexo": "OUTRO",
         "perfil": "idoso"
     },
     {
