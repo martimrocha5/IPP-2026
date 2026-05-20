@@ -70,6 +70,11 @@ def carregar_utilizadores(utilizadores, ficheiro):
                     sexo=user["sexo"],
                     perfil=user["perfil"]
                 )
+                # Restaurar histórico se existir
+                if "historico" in user:
+                    for h in user["historico"]:
+                        if len(h) == 4:
+                            novo_user.adicionar_historico(h[0], h[1], h[2], h[3])
                 utilizadores.inserir(novo_user)
             except (KeyError, ValueError):
                 ignorados += 1
@@ -100,11 +105,12 @@ def gravar_utilizadores(utilizadores, ficheiro):
     todos = utilizadores.listar_todos()
     dados = [
         {
-            "id":     u.get_id(),
-            "nome":   u.get_nome(),
-            "idade":  u.get_idade(),
-            "sexo":   u.get_sexo(),
-            "perfil": u.get_perfil()
+            "id":        u.get_id(),
+            "nome":      u.get_nome(),
+            "idade":     u.get_idade(),
+            "sexo":      u.get_sexo(),
+            "perfil":    u.get_perfil(),
+            "historico": u.get_historico()
         }
         for u in todos
     ]
@@ -252,6 +258,7 @@ def processar_editar_utilizador(partes, utilizadores, auditoria):
             idade = int(novo_valor)
             if not (0 <= idade <= 120):
                 raise ValueError("Idade deve estar entre 0 e 120.")
+            Utilizador.validar_perfil_idade(user.get_perfil(), idade)
             user._idade = idade
         elif campo == "sexo":
             if novo_valor.upper() not in ["M", "F", "OUTRO"]:
@@ -260,6 +267,7 @@ def processar_editar_utilizador(partes, utilizadores, auditoria):
         elif campo == "perfil":
             if novo_valor.lower() not in PERFIS_VALIDOS:
                 raise ValueError(f"Perfil deve ser um de: {', '.join(PERFIS_VALIDOS)}")
+            Utilizador.validar_perfil_idade(novo_valor.lower(), user.get_idade())
             user._perfil = novo_valor.lower()
         else:
             print(f" Campo '{campo}' desconhecido.")

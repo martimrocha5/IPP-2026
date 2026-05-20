@@ -30,8 +30,7 @@ class Utilizador:
             raise ValueError(f"Idade inválida ({idade}). Deve estar entre 0 e 120 anos.")
         if sexo not in ["M", "F", "OUTRO"]:
             raise ValueError(f"Sexo inválido ('{sexo}'). Use M, F ou OUTRO.")
-        if perfil.lower() == "idoso" and idade <= 65:
-            raise ValueError(f"Para o perfil 'idoso', a idade deve ser superior a 65 anos. Idade fornecida: {idade}")
+        Utilizador.validar_perfil_idade(perfil, idade)
 
         self._id        = id_utilizador
         self._nome      = nome
@@ -39,6 +38,12 @@ class Utilizador:
         self._sexo      = sexo
         self._perfil    = perfil
         self._historico = []
+
+    @staticmethod
+    def validar_perfil_idade(perfil, idade):
+        """Valida a consistência entre o perfil clínico e a idade."""
+        if perfil.lower() == "idoso" and idade <= 65:
+            raise ValueError(f"Para o perfil 'idoso', a idade deve ser superior a 65 anos. Idade fornecida: {idade}")
 
     # ── Getters ──────────────────────────────────────────────────────────────
     def get_id(self):       return self._id

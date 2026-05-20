@@ -183,9 +183,11 @@ class VisualizacaoDados:
 
         # Imprimir resumo na consola
         print("\n--- Resumo Estatístico dos Utilizadores ---")
-        for perfil, idades in idades_por_perfil.items():
-            media = sum(idades) / len(idades)
-            print(f" {perfil:35s} | {len(idades):4d} utilizadores | Idade média: {media:.1f} anos")
+        for perfil in labels:
+            if perfil in idades_por_perfil:
+                idades = idades_por_perfil[perfil]
+                media = sum(idades) / len(idades)
+                print(f" {perfil:35s} | {len(idades):4d} utilizadores | Idade média: {media:.1f} anos")
         print("-" * 60)
 
         fig.tight_layout()

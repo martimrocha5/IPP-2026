@@ -1336,6 +1336,7 @@ class AppGui(tk.Tk):
                 return
             try:
                 idade = int(idade_str)
+                Utilizador.validar_perfil_idade(cb_perfil.get(), idade)
                 u._nome = nome
                 u._idade = idade
                 u._sexo = cb_sexo.get()

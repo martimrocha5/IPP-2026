@@ -4,419 +4,651 @@
         "nome": "Tomás Gomes",
         "idade": 87,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00002",
         "nome": "Rui Ferreira",
         "idade": 91,
         "sexo": "M",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00003",
         "nome": "Pedro Santos",
         "idade": 41,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00004",
         "nome": "João Pereira",
         "idade": 89,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00005",
         "nome": "Marta Martins",
         "idade": 41,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00006",
         "nome": "Catarina Pereira",
         "idade": 83,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00007",
         "nome": "Gonçalo Silva",
         "idade": 43,
         "sexo": "M",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00008",
         "nome": "Martim Rocha",
         "idade": 20,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": [
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "exercicio",
+                2072.0
+            ],
+            [
+                "Estacao_Comboios",
+                "Braga_Parque",
+                "exercicio",
+                1096.0
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "relaxar",
+                6680
+            ],
+            [
+                "Estacao_Comboios",
+                "Estadio_Municipal",
+                "relaxar",
+                3430
+            ],
+            [
+                "Estacao_Comboios",
+                "Estadio_Municipal",
+                "padrao",
+                2920
+            ],
+            [
+                "UMinho_Gualtar",
+                "Braga_Parque",
+                "padrao",
+                3340
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "padrao",
+                4400
+            ],
+            [
+                "Praca_Republica",
+                "Jardim_Santa_Barbara",
+                "padrao",
+                1510
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "padrao",
+                4840
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "padrao",
+                4840
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "exercicio+ar_puro",
+                3972.0
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "exercicio+ar_puro",
+                4412.0
+            ],
+            [
+                "Se_Braga",
+                "Avenida_Liberdade",
+                "relaxar+exercicio",
+                749.0
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "relaxar+ar_puro",
+                6440
+            ],
+            [
+                "Se_Braga",
+                "Avenida_Liberdade",
+                "exercicio+ar_puro",
+                1173.0
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "padrao",
+                5960
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "relaxar+ar_puro",
+                6060
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "relaxar+ar_puro",
+                6060
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "exercicio+ar_puro",
+                3112.0
+            ],
+            [
+                "Hospital_Braga",
+                "Bom_Jesus",
+                "relaxar+ar_puro",
+                6135
+            ],
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "exercicio+ar_puro",
+                3152.0
+            ],
+            [
+                "Jardim_Santa_Barbara",
+                "Bom_Jesus",
+                "exercicio+ar_puro",
+                3140.0
+            ],
+            [
+                "Estadio_Municipal",
+                "Bom_Jesus",
+                "exercicio+ar_puro",
+                4118.0
+            ],
+            [
+                "Estadio_Municipal",
+                "Bom_Jesus",
+                "exercicio+ar_puro",
+                3538.0
+            ],
+            [
+                "Estadio_Municipal",
+                "Praca_Republica",
+                "exercicio+ar_puro",
+                1308.0
+            ],
+            [
+                "Estadio_Municipal",
+                "Praca_Republica",
+                "ar_puro+relaxar",
+                2610
+            ]
+        ]
     },
     {
         "id": "U00009",
         "nome": "Diogo Rodrigues",
         "idade": 91,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00010",
         "nome": "Beatriz Lopes",
         "idade": 69,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00011",
         "nome": "Inês Gomes",
         "idade": 93,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00012",
         "nome": "João Silva",
         "idade": 55,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00013",
         "nome": "Carolina Santos",
         "idade": 45,
         "sexo": "F",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00014",
         "nome": "Leonor Costa",
         "idade": 68,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00015",
         "nome": "Pedro Costa",
         "idade": 79,
         "sexo": "M",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00016",
         "nome": "Leonor Santos",
         "idade": 80,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00017",
         "nome": "Joana Rodrigues",
         "idade": 20,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00018",
         "nome": "João Santos",
         "idade": 76,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00019",
         "nome": "Bruno Pereira",
         "idade": 73,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00020",
         "nome": "Inês Ferreira",
         "idade": 68,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00021",
         "nome": "Miguel Santos",
         "idade": 26,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00022",
         "nome": "Marta Pereira",
         "idade": 57,
         "sexo": "F",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00023",
         "nome": "Beatriz Martins",
         "idade": 47,
         "sexo": "F",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00024",
         "nome": "Gonçalo Pereira",
         "idade": 94,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00025",
         "nome": "Catarina Oliveira",
         "idade": 43,
         "sexo": "F",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00026",
         "nome": "João Gomes",
         "idade": 80,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00027",
         "nome": "Sofia Rodrigues",
         "idade": 33,
         "sexo": "F",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00028",
         "nome": "Inês Lopes",
         "idade": 91,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00029",
         "nome": "Leonor Martins",
         "idade": 66,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00030",
         "nome": "Joana Costa",
         "idade": 77,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00031",
         "nome": "Carolina Gomes",
         "idade": 44,
         "sexo": "F",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00032",
         "nome": "Sofia Santos",
         "idade": 95,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00033",
         "nome": "Beatriz Lopes",
         "idade": 48,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00034",
         "nome": "Bruno Silva",
         "idade": 94,
         "sexo": "M",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00035",
         "nome": "Pedro Gomes",
         "idade": 54,
         "sexo": "M",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00036",
         "nome": "Beatriz Oliveira",
         "idade": 29,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00037",
         "nome": "João Santos",
         "idade": 19,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00038",
         "nome": "Rui Ferreira",
         "idade": 25,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00039",
         "nome": "Rui Silva",
         "idade": 33,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00040",
         "nome": "Sofia Gomes",
         "idade": 84,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00041",
         "nome": "Leonor Lopes",
         "idade": 77,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00042",
         "nome": "Beatriz Rodrigues",
         "idade": 70,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00043",
         "nome": "Tiago Lopes",
         "idade": 60,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00044",
         "nome": "Hugo Gomes",
         "idade": 53,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00045",
         "nome": "Pedro Lopes",
         "idade": 72,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00046",
         "nome": "Marta Lopes",
         "idade": 66,
         "sexo": "F",
-        "perfil": "pessoa com mobilidade reduzida"
+        "perfil": "pessoa com mobilidade reduzida",
+        "historico": []
     },
     {
         "id": "U00047",
         "nome": "Marta Gomes",
         "idade": 32,
         "sexo": "F",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00048",
         "nome": "Catarina Gomes",
         "idade": 77,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U00049",
         "nome": "Gonçalo Santos",
         "idade": 62,
         "sexo": "M",
-        "perfil": "adulto saudável"
+        "perfil": "adulto saudável",
+        "historico": []
     },
     {
         "id": "U00050",
         "nome": "Gonçalo Silva",
         "idade": 89,
         "sexo": "M",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U13495",
         "nome": "Ana de Silva",
         "idade": 72,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U32351",
         "nome": "Ana de Silva",
         "idade": 72,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U34595",
         "nome": "Tomás Cruz",
         "idade": 70,
         "sexo": "OUTRO",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U36571",
         "nome": "Ana de Silva",
         "idade": 72,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U40482",
         "nome": "Tomás Cruz",
         "idade": 70,
         "sexo": "OUTRO",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U46617",
         "nome": "Ana de Silva",
         "idade": 72,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U73225",
         "nome": "Ana de Silva",
         "idade": 72,
         "sexo": "F",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U79706",
         "nome": "Tomás Cruz",
         "idade": 70,
         "sexo": "OUTRO",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
+    },
+    {
+        "id": "U79962",
+        "nome": "EU",
+        "idade": 18,
+        "sexo": "M",
+        "perfil": "adulto saudável",
+        "historico": [
+            [
+                "Avenida_Liberdade",
+                "Bom_Jesus",
+                "padrao",
+                6130
+            ]
+        ]
     },
     {
         "id": "U88657",
         "nome": "Tomás Cruz",
         "idade": 70,
         "sexo": "OUTRO",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     },
     {
         "id": "U93065",
         "nome": "Tomás Cruz",
         "idade": 70,
         "sexo": "OUTRO",
-        "perfil": "idoso"
+        "perfil": "idoso",
+        "historico": []
     }
 ]
