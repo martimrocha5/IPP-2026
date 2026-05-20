@@ -30,6 +30,8 @@ class Utilizador:
             raise ValueError(f"Idade inválida ({idade}). Deve estar entre 0 e 120 anos.")
         if sexo not in ["M", "F", "OUTRO"]:
             raise ValueError(f"Sexo inválido ('{sexo}'). Use M, F ou OUTRO.")
+        if perfil.lower() == "idoso" and idade <= 65:
+            raise ValueError(f"Para o perfil 'idoso', a idade deve ser superior a 65 anos. Idade fornecida: {idade}")
 
         self._id        = id_utilizador
         self._nome      = nome

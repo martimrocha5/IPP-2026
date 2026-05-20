@@ -198,7 +198,7 @@
     {
         "id": "U00029",
         "nome": "Leonor Martins",
-        "idade": 65,
+        "idade": 66,
         "sexo": "F",
         "perfil": "idoso"
     },
@@ -350,6 +350,27 @@
         "perfil": "idoso"
     },
     {
+        "id": "U13495",
+        "nome": "Ana de Silva",
+        "idade": 72,
+        "sexo": "F",
+        "perfil": "idoso"
+    },
+    {
+        "id": "U32351",
+        "nome": "Ana de Silva",
+        "idade": 72,
+        "sexo": "F",
+        "perfil": "idoso"
+    },
+    {
+        "id": "U34595",
+        "nome": "Tomás Cruz",
+        "idade": 70,
+        "sexo": "OUTRO",
+        "perfil": "idoso"
+    },
+    {
         "id": "U36571",
         "nome": "Ana de Silva",
         "idade": 72,
@@ -359,7 +380,7 @@
     {
         "id": "U40482",
         "nome": "Tomás Cruz",
-        "idade": 30,
+        "idade": 70,
         "sexo": "OUTRO",
         "perfil": "idoso"
     },
@@ -380,14 +401,21 @@
     {
         "id": "U79706",
         "nome": "Tomás Cruz",
-        "idade": 30,
+        "idade": 70,
         "sexo": "OUTRO",
         "perfil": "idoso"
     },
     {
         "id": "U88657",
         "nome": "Tomás Cruz",
-        "idade": 30,
+        "idade": 70,
+        "sexo": "OUTRO",
+        "perfil": "idoso"
+    },
+    {
+        "id": "U93065",
+        "nome": "Tomás Cruz",
+        "idade": 70,
         "sexo": "OUTRO",
         "perfil": "idoso"
     }

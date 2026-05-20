@@ -476,7 +476,12 @@ def main():
                         sexo = rem_partes[-1].upper()
                         nome = " ".join(rem_partes[:-2]).strip()
                     else:
-                        idade = 30
+                        if perfil_encontrado == "idoso":
+                            idade = 70
+                        elif perfil_encontrado == "adulto saudável":
+                            idade = 30
+                        else: # pessoa com mobilidade reduzida
+                            idade = 50
                         sexo = "OUTRO"
                         nome = remaining
                         

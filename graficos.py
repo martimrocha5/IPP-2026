@@ -95,16 +95,31 @@ class VisualizacaoDados:
                      fontsize=15, fontweight='bold', color='#0f172a', y=0.98)
 
         # --- Gráfico 1: Donut Moderno de Perfis ---
-        cores = ['#ef4444', '#0284c7', '#10b981'] # Red 500, Sky 600, Emerald 500
-        labels = list(contagem_perfis.keys())
-        valores = list(contagem_perfis.values())
+        # Mapeamento estrito de cores para perfis para evitar trocas cromáticas visuais
+        COR_PERFIL = {
+            "idoso": "#ef4444",                     # Red 500
+            "pessoa com mobilidade reduzida": "#0284c7", # Sky 600
+            "adulto saudável": "#10b981"             # Emerald 500
+        }
+        
+        # Ordem de apresentação padrão para garantir consistência visual em todas as visualizações
+        ordem_perfis = ["idoso", "pessoa com mobilidade reduzida", "adulto saudável"]
+        # Filtrar apenas os perfis ativos
+        labels = [p for p in ordem_perfis if p in contagem_perfis]
+        # Caso haja algum perfil ativo não mapeado na ordem padrão
+        for p in contagem_perfis:
+            if p not in labels:
+                labels.append(p)
+
+        valores = [contagem_perfis[p] for p in labels]
+        cores_pie = [COR_PERFIL.get(p, "#cbd5e1") for p in labels]
 
         # Ocultamos os nomes das fatias no donut e mostramos apenas a percentagem interna
         # para garantir sobreposição zero. Os nomes e totais vão para a legenda.
         wedges, texts, autotexts = ax1.pie(
             valores,
             autopct='%1.1f%%',
-            colors=cores[:len(labels)],
+            colors=cores_pie,
             startangle=140,
             pctdistance=0.75,
             wedgeprops=dict(width=0.4, edgecolor='white', linewidth=2),
@@ -136,10 +151,10 @@ class VisualizacaoDados:
         labels_list = []
         cores_list = []
         
-        for i, perfil in enumerate(labels):
+        for perfil in labels:
             idades_list.append(idades_por_perfil[perfil])
             labels_list.append(perfil.replace('_', ' ').title())
-            cores_list.append(cores[i % len(cores)])
+            cores_list.append(COR_PERFIL.get(perfil, "#cbd5e1"))
 
         ax2.hist(
             idades_list,

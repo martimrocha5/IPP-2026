@@ -53,7 +53,7 @@ def gerar_dataset_utilizadores(quantidade, nome_ficheiro="dataset_utilizadores.j
         # Perfil e idade coerente
         perfil = random.choice(perfis_possiveis)
         if perfil == "idoso":
-            idade = random.randint(65, 95)
+            idade = random.randint(66, 95)
         elif perfil == "adulto saudável":
             idade = random.randint(18, 64)
         else:   # pessoa com mobilidade reduzida — qualquer faixa etária adulta
