@@ -535,6 +535,9 @@ def main():
                 elif clima_atual == "Noite":
                     clima_atual = "Chuva"
                     print("🌧️ O tempo mudou! Está a chover em Braga. Ruas com piso irregular estão perigosas.")
+                elif clima_atual == "Chuva":
+                    clima_atual = "Noite_Chuva"
+                    print("🌧️🌙 O tempo mudou! Está a chover E é de noite em Braga. Visibilidade reduzida e pisos muito escorregadios!")
                 else:
                     clima_atual = "Sol"
                     print("☀️ O tempo mudou! O sol brilha em Braga. Piso irregular mais seguro.")

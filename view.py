@@ -26,9 +26,10 @@ CONSULTA:
   historico <id_utilizador>      Mostra histórico de percursos
 
 RECOMENDAÇÃO:
-  recomendar <origem> <destino> <id_utilizador> [modo]
-      Calcula melhor rota para o utilizador.
-      Modos: padrao | relaxar | exercicio | ar_puro
+  recomendar <origem> <destino> <id_utilizador> [modo] [acompanhante]
+      Calcula a melhor rota para o utilizador.
+      Modos: padrao | relaxar | exercicio | ar_puro | trabalho
+      Acompanhantes: Cadeira de Rodas | Carrinho de Bebé | Andarilho | Carrinho de Mão | Carrinho de Compras | Mala com Rodas
 
 VISUALIZAÇÃO:
   mapa                           Mostra mapa textual da rede
