@@ -105,7 +105,7 @@ class ArvoreUtilizadores:
                 nodo_novo._esq = nodo._esq
                 
                 if pai_sucessor == nodo:
-                    nodo_novo._dir = nodo._dir._remover_recursivo(nodo._dir._dir, sucessor.get_utilizador().get_id())
+                    nodo_novo._dir, _ = self._remover_recursivo(nodo._dir, sucessor.get_utilizador().get_id())
                 else:
                     pai_sucessor._esq, _ = self._remover_recursivo(pai_sucessor._esq, sucessor.get_utilizador().get_id())
                     nodo_novo._dir = nodo._dir
