@@ -320,6 +320,33 @@ def main():
                         continue
 
                     user_atual = utilizadores.procurar(id_utilizador)
+                    
+                    # Se não encontrado por ID, verificar se foi passado um perfil ou palavra-chave de perfil
+                    if user_atual is None:
+                        perfil_normalizado = id_utilizador.lower().strip()
+                        perfil_detectado = None
+                        
+                        if perfil_normalizado in ["idoso", "idosa"]:
+                            perfil_detectado = "idoso"
+                        elif perfil_normalizado in ["adulto", "saudável", "saudavel", "adulto saudável", "adulto saudavel"]:
+                            perfil_detectado = "adulto saudável"
+                        elif perfil_normalizado in ["mobilidade", "reduzida", "pessoa com mobilidade reduzida", "pcd"]:
+                            perfil_detectado = "pessoa com mobilidade reduzida"
+                            
+                        if perfil_detectado:
+                            # Tentar encontrar qualquer utilizador real na árvore com esse perfil
+                            todos_users = utilizadores.listar_todos()
+                            for u in todos_users:
+                                if u.get_perfil() == perfil_detectado:
+                                    user_atual = u
+                                    print(f"ℹ️ A usar o perfil '{perfil_detectado}' (associado ao utilizador '{u.get_nome()}' - {u.get_id()})")
+                                    break
+                            # Se não houver nenhum, criar um utilizador temporário genérico
+                            if user_atual is None:
+                                idade_default = 75 if perfil_detectado == "idoso" else (35 if perfil_detectado == "adulto saudável" else 50)
+                                user_atual = Utilizador("UTEMP", f"Utilizador Genérico ({perfil_detectado})", idade_default, "OUTRO", perfil_detectado)
+                                print(f"ℹ️ Criado utilizador temporário para o perfil '{perfil_detectado}'.")
+                                
                     if user_atual is not None:
                         caminho, custo = motor_recomendacao.encontrar_melhor_caminho(
                             rede, origem, destino, user_atual, modo_escolhido, acompanhante, clima_atual
@@ -411,38 +438,112 @@ def main():
 
             # ── INS_UTILIZADOR ───────────────────────────────────────────────
             elif comando == "ins_utilizador":
-                if len(partes) >= 5:
-                    nome   = partes[1]
-                    perfil = " ".join(partes[4:]).lower()
-
+                # Aceita nome com espaços e distingue assinaturas:
+                # 1. Simplificada: ins_utilizador <nome_com_espacos> <perfil>
+                # 2. Completa:     ins_utilizador <nome_com_espacos> <idade> <sexo> <perfil>
+                
+                args_str = " ".join(partes[1:])
+                perfil_encontrado = None
+                
+                # Procurar qual o perfil no final dos argumentos
+                for perf in PERFIS_VALIDOS:
+                    if args_str.lower().endswith(perf):
+                        perfil_encontrado = perf
+                        break
+                        
+                # Também suportar "adulto saudavel" sem acento
+                if not perfil_encontrado and args_str.lower().endswith("adulto saudavel"):
+                    perfil_encontrado = "adulto saudável"
+                    
+                if perfil_encontrado and len(args_str) > len(perfil_encontrado):
+                    tamanho_a_remover = len(perfil_encontrado)
+                    if not args_str.lower().endswith(perfil_encontrado) and args_str.lower().endswith("adulto saudavel"):
+                        tamanho_a_remover = len("adulto saudavel")
+                    
+                    remaining = args_str[:-tamanho_a_remover].strip()
+                    rem_partes = remaining.split()
+                    
+                    # Verificar se é o formato completo (termina com idade e sexo)
+                    is_completo = False
+                    if len(rem_partes) >= 2:
+                        idade_cand = rem_partes[-2]
+                        sexo_cand = rem_partes[-1].upper()
+                        if idade_cand.isdigit() and sexo_cand in ["M", "F", "OUTRO"]:
+                            is_completo = True
+                            
+                    if is_completo:
+                        idade = int(rem_partes[-2])
+                        sexo = rem_partes[-1].upper()
+                        nome = " ".join(rem_partes[:-2]).strip()
+                    else:
+                        idade = 30
+                        sexo = "OUTRO"
+                        nome = remaining
+                        
                     try:
-                        idade = int(partes[2])
-                    except ValueError:
-                        print("❌ Idade deve ser um número inteiro.")
-                        continue
-
-                    sexo = partes[3].upper()
-
-                    if perfil not in PERFIS_VALIDOS:
-                        print(f"❌ Perfil inválido. Perfis válidos: {' | '.join(PERFIS_VALIDOS)}")
-                        continue
-
-                    try:
-                        novo_id    = gerar_id_unico(utilizadores)
-                        novo_user  = Utilizador(novo_id, nome, idade, sexo, perfil)
+                        novo_id = gerar_id_unico(utilizadores)
+                        novo_user = Utilizador(novo_id, nome, idade, sexo, perfil_encontrado)
                         utilizadores.inserir(novo_user)
-                        print(f"✅ Utilizador '{nome}' inserido com ID: {novo_id}")
+                        if is_completo:
+                            print(f"✅ Utilizador '{nome}' inserido com ID: {novo_id} (Formato Completo)")
+                        else:
+                            print(f"✅ Utilizador '{nome}' inserido com ID: {novo_id} (Perfil: {perfil_encontrado}, Idade default: {idade})")
+                        gravar_utilizadores(utilizadores, "dataset_utilizadores.json") # Auto-save
                     except ValueError as e:
                         print(f"❌ Erro de validação: {e}")
                 else:
-                    print("❌ Formato inválido. Utiliza: ins_utilizador <nome> <idade> <sexo> <perfil>")
+                    print("❌ Formato inválido.")
+                    print("   Utiliza (simplificado): ins_utilizador <nome> <perfil>")
+                    print("   Utiliza (completo):     ins_utilizador <nome> <idade> <sexo> <perfil>")
                     print(f"   Perfis válidos: {' | '.join(PERFIS_VALIDOS)}")
 
             # ── INS_PERCURSO ─────────────────────────────────────────────────
             elif comando == "ins_percurso":
-                # ins_percurso <origem> <destino> <dist> <temp> <ar> <ruido>
-                #              <verdes> <inclinacao> <pav> <passadeiras> <ilum>
-                if len(partes) == 12:
+                # Aceita o formato simplificado: ins_percurso <origem>-<destino> ou ins_percurso <origem> <destino>
+                # E também o formato completo: ins_percurso <origem> <destino> <dist> <temp> <ar> <ruido> <verdes> <inclinacao> <pav> <passadeiras> <ilum>
+                
+                origem, destino = None, None
+                usou_simplificado = False
+                
+                if len(partes) == 2:
+                    # Formato ins_percurso <origem>-<destino>
+                    percurso = partes[1]
+                    for delim in ["->", "-", "↔", "to"]:
+                        if delim in percurso:
+                            sub_p = percurso.split(delim)
+                            if len(sub_p) == 2:
+                                origem = sub_p[0].strip()
+                                destino = sub_p[1].strip()
+                                usou_simplificado = True
+                                break
+                elif len(partes) == 3:
+                    # Formato ins_percurso <origem> <destino>
+                    origem = partes[1]
+                    destino = partes[2]
+                    usou_simplificado = True
+                    
+                if usou_simplificado and origem and destino:
+                    distancia   = 1000.0
+                    temp        = 20.0
+                    ar          = 80.0
+                    ruido       = 30.0
+                    verdes      = 50.0
+                    inclinacao  = 0.0
+                    pavimento   = "regular"
+                    passadeiras = "sim"
+                    iluminacao  = "boa"
+                    
+                    try:
+                        novo_seg = Segmento(
+                            origem, destino, distancia, temp, ar,
+                            ruido, verdes, inclinacao, pavimento, passadeiras, iluminacao
+                        )
+                        rede.adicionar_segmento(novo_seg)
+                        print(f"✅ Percurso '{origem} -> {destino}' ({distancia}m) inserido com sucesso (Valores por omissão).")
+                    except ValueError as e:
+                        print(f"❌ Erro de validação: {e}")
+                        
+                elif len(partes) == 12:
                     origem    = partes[1]
                     destino   = partes[2]
                     pavimento = partes[9].lower()
@@ -477,12 +578,47 @@ def main():
                         print(f"❌ Erro de validação: {e}")
                 else:
                     print("❌ Formato inválido.")
-                    print("   Utiliza: ins_percurso <origem> <destino> <dist> <temp> <ar> <ruido>")
-                    print("                          <verdes> <inclinacao> <pav> <passadeiras> <ilum>")
+                    print("   Utiliza (simplificado): ins_percurso <origem>-<destino> ou <origem> <destino>")
+                    print("   Utiliza (completo):     ins_percurso <origem> <destino> <dist> <temp> <ar> <ruido>")
+                    print("                                <verdes> <inclinacao> <pav> <passadeiras> <ilum>")
 
             # ── VER ──────────────────────────────────────────────────────────
             elif comando == "ver":
-                if len(partes) == 3:
+                if len(partes) == 1:
+                    # Sem argumentos: mostra mapa na consola e abre a janela gráfica (GUI)
+                    print("\n🌐 A desenhar mapa na consola...")
+                    View.mostrar_mapa()
+                    print("🌐 A iniciar a interface gráfica 'Braga Saudável'...")
+                    try:
+                        from gui import AppGui
+                        app = AppGui()
+                        app.mainloop()
+                        print("✅ Interface gráfica fechada.")
+                    except Exception as ex:
+                        print(f"❌ Erro ao iniciar a interface gráfica: {ex}")
+                elif len(partes) == 2:
+                    # 1 argumento: ver <percurso> (ex: ver Hospital_Braga-Bom_Jesus)
+                    percurso = partes[1]
+                    origem, destino = None, None
+                    for delim in ["->", "-", "↔", "to"]:
+                        if delim in percurso:
+                            sub_partes = percurso.split(delim)
+                            if len(sub_partes) == 2:
+                                origem = sub_partes[0].strip()
+                                destino = sub_partes[1].strip()
+                                break
+                    if origem and destino:
+                        segmento_encontrado = None
+                        for seg in rede.obter_conexoes(origem):
+                            if seg.get_destino() == destino:
+                                segmento_encontrado = seg
+                                break
+                        View.mostrar_detalhes_segmento(origem, destino, segmento_encontrado)
+                    else:
+                        print(f"❌ Formato inválido. Não foi possível identificar a origem e destino em '{percurso}'.")
+                        print("   Use um delimitador como '-' ou '->' (ex: ver Hospital_Braga-Bom_Jesus)")
+                elif len(partes) == 3:
+                    # 2 argumentos: ver <origem> <destino> (ex: ver Hospital_Braga Bom_Jesus)
                     origem, destino = partes[1], partes[2]
                     segmento_encontrado = None
                     for seg in rede.obter_conexoes(origem):
@@ -491,7 +627,10 @@ def main():
                             break
                     View.mostrar_detalhes_segmento(origem, destino, segmento_encontrado)
                 else:
-                    print("❌ Formato inválido. Utiliza: ver <origem> <destino>")
+                    print("❌ Formato inválido. Utiliza:")
+                    print("   - ver (sem argumentos para abrir janela gráfica)")
+                    print("   - ver <origem>-<destino> (formato percurso)")
+                    print("   - ver <origem> <destino> (dois argumentos separados por espaço)")
 
             # ── MAPA ─────────────────────────────────────────────────────────
             elif comando == "mapa":
