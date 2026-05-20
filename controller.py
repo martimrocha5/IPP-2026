@@ -328,8 +328,18 @@ def main():
                             distancia_total = sum(seg.get_distancia() for seg in caminho)
                             inclinacao_abs = sum(abs(seg.get_inclinacao()) for seg in caminho)
                             velocidade_kmh = 4.0
-                            if user_atual.get_perfil() in ["idoso", "pessoa com mobilidade reduzida"]: velocidade_kmh -= 1.5
-                            if acompanhante in ["Cadeira de Rodas", "Andarilho"]: velocidade_kmh -= 1.0
+                            if "trabalho" in modo_escolhido:
+                                velocidade_kmh = 5.5  # Passo apressado para ir para o trabalho
+                            if user_atual.get_perfil() in ["idoso", "pessoa com mobilidade reduzida"]:
+                                if "trabalho" in modo_escolhido:
+                                    velocidade_kmh = 3.5  # Mesmo idosos apressam o passo para o trabalho
+                                else:
+                                    velocidade_kmh -= 1.5
+                            if acompanhante in ["Cadeira de Rodas", "Andarilho"]:
+                                if "trabalho" in modo_escolhido:
+                                    velocidade_kmh = max(1.5, velocidade_kmh - 0.5)
+                                else:
+                                    velocidade_kmh -= 1.0
                             velocidade_kmh = max(1.0, velocidade_kmh)
                             tempo_minutos = int(((distancia_total / 1000.0) / velocidade_kmh) * 60)
                             calorias_base = (distancia_total / 1000.0) * 50
@@ -339,7 +349,7 @@ def main():
                             print(f"\n[CLIMA: {clima_atual}] ⏱️ Tempo: ~{tempo_minutos} min | 🔥 Calorias: ~{calorias} kcal")
                             
                         View.mostrar_resultado_rota(
-                            origem, destino, user_atual, modo_escolhido, caminho, custo, motor_analise
+                            origem, destino, user_atual, modo_escolhido, caminho, custo, motor_analise, acompanhante, clima_atual
                         )
                         if caminho:
                             user_atual.adicionar_historico(origem, destino, modo_escolhido, custo)

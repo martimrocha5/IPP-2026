@@ -56,25 +56,41 @@ SISTEMA:
     @staticmethod
     def mostrar_mapa():
         mapa = """
-        ============================================================
-                🗺️  REDE URBANA: BRAGA SAUDÁVEL 🗺️
-        ============================================================
-
-                             [Bom_Jesus]
-                            /           \\
-                           /             \\
-                          /               \\
-        [UMinho_Gualtar] ---- [Braga_Parque] ---- [Estacao_Comboios]
-                                         \\           /
-                                          \\         /
-                                      [Praca_Republica]
-
-        ============================================================
-        Ligações ativas:
-        - Gualtar <-> Bom Jesus        | Gualtar <-> Braga Parque
-        - Braga Parque <-> Praça Rep.  | Braga Parque <-> Estação
-        - Praça República <-> Estação  | Praça República <-> Bom Jesus
-        ============================================================
+         ========================================================================
+                      🗺️   REDE URBANA: BRAGA SAUDÁVEL (EXPANDIDA) 🗺️
+         ========================================================================
+         
+                             [Estadio_Municipal]
+                                 /          \\
+                                /            \\
+                     [Estacao_Comboios]    [Jardim_Santa_Barbara]
+                        /      |     \\       /       \\
+                       /       |      \\     /         \\
+                      /        |     [Praca_Republica] ---- [Braga_Parque] ---- [UMinho_Gualtar]
+               [Se_Braga]      |      /    |     \\       /     /          /
+                  \\   \\        |     /     |      \\     /     /          /
+                   \\   \\-------|----/      |       \\   /     /          /
+                    \\          |           |      [Hospital_Braga]-----/
+                  [Avenida_Liberdade]      |             /
+                          \\                |            /
+                           \\               |           /
+                   [Santuario_Sameiro] ----------- [Bom_Jesus]
+                   
+         ========================================================================
+         Pontos da Rede e suas principais conexões:
+         - Estadio_Municipal    <-> Estacao_Comboios, Praca_Republica
+         - Estacao_Comboios     <-> Estadio_Municipal, Se_Braga, Praca_Republica, Braga_Parque
+         - Se_Braga             <-> Estacao_Comboios, Jardim_Santa_Barbara, Avenida_Liberdade
+         - Jardim_Santa_Barbara  <-> Se_Braga, Praca_Republica
+         - Praca_Republica      <-> Jardim_Santa_Barbara, Avenida_Liberdade, Estacao_Comboios, 
+                                    Estadio_Municipal, Braga_Parque, Hospital_Braga, Bom_Jesus
+         - Avenida_Liberdade    <-> Praca_Republica, Se_Braga, Santuario_Sameiro
+         - Santuario_Sameiro    <-> Avenida_Liberdade, Bom_Jesus
+         - Bom_Jesus            <-> Santuario_Sameiro, Hospital_Braga, Praca_Republica, UMinho_Gualtar
+         - Hospital_Braga       <-> UMinho_Gualtar, Braga_Parque, Bom_Jesus, Praca_Republica
+         - UMinho_Gualtar       <-> Hospital_Braga, Braga_Parque, Bom_Jesus
+         - Braga_Parque         <-> UMinho_Gualtar, Hospital_Braga, Praca_Republica, Estacao_Comboios
+         ========================================================================
         """
         print(mapa)
 
@@ -119,7 +135,7 @@ SISTEMA:
         print("-----------------------------")
 
     @staticmethod
-    def mostrar_resultado_rota(origem, destino, utilizador, modo, caminho, custo, motor_analise):
+    def mostrar_resultado_rota(origem, destino, utilizador, modo, caminho, custo, motor_analise, acompanhante="Nenhum", clima="Sol"):
         print(f"\n============================================================")
         print(f" ROTA RECOMENDADA: {origem} -> {destino}")
         print(f" Utilizador: {utilizador.get_nome()} |  Modo: {modo.upper()}")
@@ -131,7 +147,7 @@ SISTEMA:
             print("\n Itinerário Passo-a-Passo:")
             
             for i, seg in enumerate(caminho, 1):
-                conforto = motor_analise.calcular_indice_conforto(seg, utilizador, modo)
+                conforto = motor_analise.calcular_indice_conforto(seg, utilizador, modo, acompanhante, clima)
                 print(f"  {i}. {seg.get_origem()} -> {seg.get_destino()} ({seg.get_distancia()}m) [Conforto: {conforto}/100]")
             
             print("\n Destino atingido com sucesso!")
